@@ -9,7 +9,7 @@ using System.Linq;
 namespace BIMiconToolbar.InteriorElevations
 {
     [TransactionAttribute(TransactionMode.Manual)]
-    class InteriorElevations : IExternalCommand
+    internal class InteriorElevations : IExternalCommand
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
@@ -83,7 +83,8 @@ namespace BIMiconToolbar.InteriorElevations
                         TaskDialog.Show("Warning", "Please create a view template");
                         return Result.Cancelled;
                     }
-                    #endregion
+
+                    #endregion Required elements for this tool
 
                     // Room selected
                     else if (selectedIntIds != null)
@@ -91,7 +92,7 @@ namespace BIMiconToolbar.InteriorElevations
                         // Select first plan view
                         FilteredElementCollector floorPlansCollector = new FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Views);
                         View floorPlan = floorPlansCollector.Cast<View>().Where(v =>
-                                           v.ViewType == ViewType.FloorPlan).Where(v => v.IsTemplate == false).FirstOrDefault();
+                                           v.ViewType == ViewType.FloorPlan).FirstOrDefault(v => !v.IsTemplate);
 
                         if (floorPlan == null)
                         {
@@ -117,6 +118,7 @@ namespace BIMiconToolbar.InteriorElevations
                                 var annoCategories = Helpers.Helpers.AnnoCatIds(doc);
 
                                 #region Rectangular rooms without interior boundaries
+
                                 if (boundaries[0].Count == 4 && boundaries.Count == 1 && Helpers.Helpers.IsRectangle(boundaries[0]))
                                 {
                                     // Transaction
@@ -274,9 +276,11 @@ namespace BIMiconToolbar.InteriorElevations
                                     // Commit transaction
                                     t.Commit();
                                 }
-                                #endregion
+
+                                #endregion Rectangular rooms without interior boundaries
 
                                 #region Rest of rooms
+
                                 // When room has more or less than 4 sides
                                 else
                                 {
@@ -447,11 +451,13 @@ namespace BIMiconToolbar.InteriorElevations
                                     // Commit transaction
                                     t2.Commit();
                                 }
-                                #endregion
+
+                                #endregion Rest of rooms
                             }
                         }
 
                         #region Display results to user
+
                         // Display results to user
                         if (roomsSucceeded.Count > 0)
                         {
@@ -462,7 +468,8 @@ namespace BIMiconToolbar.InteriorElevations
                         {
                             TaskDialog.Show("Error", "No room elevations have been created");
                         }
-                        #endregion
+
+                        #endregion Display results to user
                     }
                 }
 

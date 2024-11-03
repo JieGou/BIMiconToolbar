@@ -1,7 +1,7 @@
-﻿using BIMiconToolbar.Helpers.MVVM.ViewModel;
+﻿using BIMicon.BIMiconToolbar.Models.MVVM.ViewModel;
 using System.Windows.Input;
 
-namespace BIMiconToolbar.Helpers.UserControls.OKCancel.ViewModel
+namespace BIMicon.BIMiconToolbar.Helpers.UserControls.OKCancel.ViewModel
 {
     class OKCancelViewModel : ViewModelBase
     {
@@ -18,7 +18,7 @@ namespace BIMiconToolbar.Helpers.UserControls.OKCancel.ViewModel
 
         public OKCancelViewModel()
         {
-            _okExecute = new RelayCommand(() => OKButtonPress("message"));
+            
         }
     }
 }
